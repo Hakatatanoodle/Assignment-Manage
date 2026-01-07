@@ -4,6 +4,7 @@
 #include<string>
 struct Assignment
 {
+    std::string title;
   std::string description;
   std::string deadline;
   bool status;
@@ -25,7 +26,7 @@ int main()
   int choice;
   std::vector<Subject> subjects;
 
-  while(choice!=6)
+  do
   {
   std::cout<<"======Assignment Manager======\n";
   std::cout<<"1.Add Subject\n";
@@ -60,7 +61,7 @@ int main()
     std::cout<<"Invalid choice\n";
     break;
   }
-}
+}while(choice!=6);
   return 0;
 }
 //function definitions
@@ -85,6 +86,16 @@ void addAssignment(std::vector<Subject>& subjects)
   std::cout<<"Choose subject: ";
   getline(std::cin,input);
   subIndex = std::stoi(input) - 1;
+  for(int i=0;i<subjects[subIndex].assignments.size();i++)
+  {
+    std::cout<<"Add the title of the assignments: "<<std::endl;
+    getline(std::cin,subjects[subIndex].assignments[i].title);
+    std::cout<<"Add the Description of the assignments: "<<std::endl;
+    getline(std::cin,subjects[subIndex].assignments[i].description);
+    std::cout<<"Add the Deadline of the assignments: "<<std::endl;
+    getline(std::cin,subjects[subIndex].assignments[i].deadline);
+  }
+
 }
 
 void viewAssignments()
