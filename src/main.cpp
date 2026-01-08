@@ -82,7 +82,7 @@ void addAssignment(std::vector<Subject>& subjects)
   std::string input;
   int subjectIndex;
   if(subjects.size()<=0) {std::cout<<"No subjects!"; return;}
-  for(int i=0;i<subjects.size();i++)
+  for(std::size_t i=0;i<subjects.size();i++)
   {
     std::cout<<i+1<<"."<<subjects[i].name<<std::endl;
   }
@@ -105,7 +105,7 @@ void viewAssignments(std::vector<Subject>& subjects)
   std::string input;
   int subjectIndex;
   if(subjects.size()<=0) {std::cout<<"No subjects!"; return;}
-  for(int i=0;i<subjects.size();i++)
+  for(std::size_t i=0;i<subjects.size();i++)
   {
     std::cout<<i+1<<"."<<subjects[i].name<<std::endl;
   }
@@ -118,7 +118,7 @@ void viewAssignments(std::vector<Subject>& subjects)
   {
     std::cout<<"Title\t"<<"Description\t"<<"Deadline\t"<<"Status\n";
     std::cout<<"--------------------------------------------------"<<std::endl;
-    for(int i=0;i<subjects[subjectIndex].assignments.size();i++)
+    for(std::size_t i=0;i<subjects[subjectIndex].assignments.size();i++)
     {
       std::cout<<subjects[subjectIndex].assignments[i].title<<"\t";
       std::cout<<subjects[subjectIndex].assignments[i].description<<"\t\t";
