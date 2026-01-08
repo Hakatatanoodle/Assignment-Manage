@@ -2,9 +2,10 @@
 #include<iostream>
 #include<vector>
 #include<string>
+#include<limits>
 struct Assignment
 {
-    std::string title;
+  std::string title;
   std::string description;
   std::string deadline;
   bool status;
@@ -17,10 +18,11 @@ struct Subject
 //function prototypes
 void addSubject(std::vector<Subject>& subjects);
 void addAssignment(std::vector<Subject>& subjects);
-void viewAssignments();
+void viewAssignments(std::vector<Subject>& subjects);
 void updateAssignment();
 void deleteAssignment();
 void saveAndExit();
+
 int main()
 {
   int choice;
@@ -28,7 +30,7 @@ int main()
 
   do
   {
-  std::cout<<"======Assignment Manager======\n";
+  std::cout<<"\n======Assignment Manager======\n";
   std::cout<<"1.Add Subject\n";
   std::cout<<"2. Add Assignment\n";
   std::cout<<"3. View Assignments\n";
@@ -46,7 +48,7 @@ int main()
     addAssignment(subjects);
     break;
     case 3:
-    viewAssignments();
+    viewAssignments(subjects);
     break;
     case 4:
     updateAssignment();
@@ -76,31 +78,55 @@ void addSubject(std::vector<Subject>& subjects)
 }
 void addAssignment(std::vector<Subject>& subjects)
 {
+  Assignment a;
   std::string input;
-  int subIndex;
-  if(subjects.size()<=0) std::cout<<"No subjects!";
+  int subjectIndex;
+  if(subjects.size()<=0) {std::cout<<"No subjects!"; return;}
   for(int i=0;i<subjects.size();i++)
   {
     std::cout<<i+1<<"."<<subjects[i].name<<std::endl;
   }
-  std::cout<<"Choose subject: ";
-  getline(std::cin,input);
-  subIndex = std::stoi(input) - 1;
-  for(int i=0;i<subjects[subIndex].assignments.size();i++)
-  {
-    std::cout<<"Add the title of the assignments: "<<std::endl;
-    getline(std::cin,subjects[subIndex].assignments[i].title);
-    std::cout<<"Add the Description of the assignments: "<<std::endl;
-    getline(std::cin,subjects[subIndex].assignments[i].description);
-    std::cout<<"Add the Deadline of the assignments: "<<std::endl;
-    getline(std::cin,subjects[subIndex].assignments[i].deadline);
-  }
-
+  std::cin.ignore(std::numeric_limits<std::streamsize>::max(),'\n');
+  std::cout<<"Choose subject: "; 
+  std::getline(std::cin,input);
+  subjectIndex = std::stoi(input) - 1;
+  std::cout<<"Enter assignment title:"<<std::endl;
+  std::getline(std::cin,a.title);
+  std::cout<<"Enter the description of the assignment: "<<std::endl;
+  std::getline(std::cin,a.description);
+  std::cout<<"Enter the deadline of the assignment: "<<std::endl;
+  std::getline(std::cin,a.deadline);
+  a.status = false;//default status
+  subjects[subjectIndex].assignments.push_back(a);
 }
 
-void viewAssignments()
+void viewAssignments(std::vector<Subject>& subjects)
 {
-  std::cout<<"Assignments\n"<<std::endl;
+  std::string input;
+  int subjectIndex;
+  if(subjects.size()<=0) {std::cout<<"No subjects!"; return;}
+  for(int i=0;i<subjects.size();i++)
+  {
+    std::cout<<i+1<<"."<<subjects[i].name<<std::endl;
+  }
+  std::cin.ignore(std::numeric_limits<std::streamsize>::max(),'\n');
+  std::cout<<"Choose subject: "; 
+  std::getline(std::cin,input);
+  subjectIndex = std::stoi(input) - 1;
+  if(subjects[subjectIndex].assignments.size()<=0) std::cout<<"No assignments!";
+  else
+  {
+    std::cout<<"Title\t"<<"Description\t"<<"Deadline\t"<<"Status\n";
+    std::cout<<"--------------------------------------------------"<<std::endl;
+    for(int i=0;i<subjects[subjectIndex].assignments.size();i++)
+    {
+      std::cout<<subjects[subjectIndex].assignments[i].title<<"\t";
+      std::cout<<subjects[subjectIndex].assignments[i].description<<"\t\t";
+      std::cout<<subjects[subjectIndex].assignments[i].deadline<<"\t";
+      if(subjects[subjectIndex].assignments[i].status) std::cout<<"Done\t";
+      else std::cout<<"Not Done\t"<<std::endl;
+    }
+  }
 }
 void updateAssignment()
 {
