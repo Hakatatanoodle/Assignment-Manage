@@ -136,7 +136,7 @@ int chooseAssignment(std::vector<Subject>& subjects)
         return -1;
     }
 
-    if (assIndex < 0 || assIndex >= subjects.size())
+    if (assIndex < 0 || assIndex >= subjects[subIndex].assignments.size())
     {
         std::cout << "Out of range!";
         return -1;
