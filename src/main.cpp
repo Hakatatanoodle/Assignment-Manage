@@ -40,6 +40,7 @@ int main()
   std::cout<<"6. Save and Exit\n";
   std::cout<<"choose: ";
   std::cin>>choice;
+  std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
   switch(choice)
   {
     case 1: 
@@ -77,15 +78,14 @@ int chooseSubject(std::vector<Subject>& subjects)
  {
   std::cout<<i+1<<"."<<subjects[i].name<<std::endl;
  }
- std::cin.ignore(std::numeric_limits<std::streamsize>::max(),'\n');
- getline(std::cin,input);
+ std::getline(std::cin,input);
  return std::stoi(input)-1;
 }
 void addSubject(std::vector<Subject>& subjects)
 {
-  std::cout<<"Enter subject name:\n"<<std::endl;
   std::string Sname;
-  std::cin>>Sname;
+  std::cout<<"Enter subject name:\n"<<std::endl;
+  std::getline(std::cin,Sname);
   Subject Sub;
   Sub.name = Sname;
   subjects.push_back(Sub);
