@@ -72,6 +72,7 @@ int main()
 int chooseSubject(std::vector<Subject>& subjects)
 {
  std::string input;
+ int subIndex;
  if(subjects.size()<=0) {std::cout<<"No subjects!"; return -1;}
  std::cout<<"\nChoose a subject\n:"; 
  for(size_t i=0;i<subjects.size();i++)
@@ -79,7 +80,18 @@ int chooseSubject(std::vector<Subject>& subjects)
   std::cout<<i+1<<"."<<subjects[i].name<<std::endl;
  }
  std::getline(std::cin,input);
- return std::stoi(input)-1;
+ try
+ {
+  subIndex = std::stoi(input);
+ }
+ catch(std::exception& e)
+ {
+  std::cout<<"Invalid input!";
+  return -1;
+ }
+ subIndex = std::stoi(input)-1;
+ if(subIndex<0 || subIndex >subjects.size()) std::cout<<"Out of range!";return -1;
+ return subIndex;
 }
 void addSubject(std::vector<Subject>& subjects)
 {
