@@ -26,7 +26,7 @@ void addSubject(std::vector<Subject>& subjects);
 void addAssignment(std::vector<Subject>& subjects);
 void viewAssignments(std::vector<Subject>& subjects);
 void updateAssignment(std::vector<Subject>& subjects);
-void deleteAssignment();
+void deleteAssignment(std::vector<Subject>& subjects);
 void deleteSubject(std::vector<Subject>& subjects);
 void saveAndExit();
 int chooseSubject(std::vector<Subject>& subjects);
@@ -65,7 +65,7 @@ int main()
     updateAssignment(subjects);
     break;
     case 5:
-    deleteAssignment();
+    deleteAssignment(subjects);
     break;
     case 6: 
     deleteSubject(subjects);
@@ -279,9 +279,13 @@ void updateAssignment(std::vector<Subject>& subjects)
   }
 }
 
-void deleteAssignment()
+void deleteAssignment(std::vector<Subject>& subjects)
 {
-  
+  std::cout << "Choose Assignment to delete: " <<std::endl;
+  Index dChoose;
+  dChoose = chooseAssignment(subjects);
+  std::cout << "Assignment : " << subjects[dChoose.subjectIndex].assignments[dChoose.assignmentIndex].title << "deleted!" <<std::endl;
+  subjects[dChoose.subjectIndex].assignments.erase(subjects[dChoose.subjectIndex].assignments.begin() + dChoose.assignmentIndex);
 }
 void deleteSubject(std::vector<Subject>& subjects)
 {
