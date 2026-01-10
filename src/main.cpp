@@ -237,7 +237,11 @@ void updateAssignment(std::vector<Subject>& subjects)
   std::getline( std::cin, aChoice );
   int choice;
   choice = inputValidation(aChoice);
-  std::cout<<choice;
+  if(choice == -1) 
+  {
+    std::cout<<"Invalid choice!"<<std::endl;
+    return ;
+  }
   // inputValidation converts 1-based input to 0-based index
 
   if(choice == 0)
@@ -260,7 +264,15 @@ void updateAssignment(std::vector<Subject>& subjects)
   }
   else if(choice == 3)
   {
-    std::cout << "current status : " << subjects[assubIndex.subjectIndex].assignments[assubIndex.assignmentIndex].status << std::endl;
+    if(subjects[assubIndex.subjectIndex].assignments[assubIndex.assignmentIndex].status == false)
+    {
+      std::cout << "current status : Not Done"<< std::endl;
+    }
+    else if(subjects[assubIndex.subjectIndex].assignments[assubIndex.assignmentIndex].status == true)
+    {
+      std::cout << "current status : Done " << std::endl;
+    }
+    
     std::cout << "Toggle (Done/NotDone) : " << std::endl;
     std::string statusInput;
     std::getline(std::cin >> std::ws ,statusInput);
@@ -270,31 +282,74 @@ void updateAssignment(std::vector<Subject>& subjects)
     }
     else if(statusInput == "not done" || statusInput == "no")
     {
-      statusInput = false;
+      subjects[assubIndex.subjectIndex].assignments[assubIndex.assignmentIndex].status = false;
     }
-    else{
+    else
+    {
       std::cout << " invalid choice!"<<std::endl;
       return ;
     }
   }
-}
+    
+  }
 
 void deleteAssignment(std::vector<Subject>& subjects)
 {
   std::cout << "Choose Assignment to delete: " <<std::endl;
   Index dChoose;
   dChoose = chooseAssignment(subjects);
-  std::cout << "Assignment : " << subjects[dChoose.subjectIndex].assignments[dChoose.assignmentIndex].title << "deleted!" <<std::endl;
+  if(dChoose.subjectIndex == -1 || dChoose.assignmentIndex == -1)
+  {
+    std::cout << "Delete aborted!";
+    return ; 
+  }
+  std::string ynchoice;
+  std::getline(std::cin >> std::ws ,ynchoice);
+  if(ynchoice == "Y" || ynchoice == "y" )
+  {
+    std::cout << "Assignment : " << subjects[dChoose.subjectIndex].assignments[dChoose.assignmentIndex].title << "deleted!" <<std::endl;
   subjects[dChoose.subjectIndex].assignments.erase(subjects[dChoose.subjectIndex].assignments.begin() + dChoose.assignmentIndex);
+    return ;
+  }
+  else if(ynchoice == "N" || ynchoice == "n")
+  {
+    std::cout << "Deletion Aborted!" << std::endl;
+    return ;
+  }
+  else
+  {
+    std::cout << "Invalid input!";
+  }
+  
 }
 void deleteSubject(std::vector<Subject>& subjects)
 {
   std::cout<<"Choose Subject to delete: " << std::endl;
   int dChoose;
   dChoose = chooseSubject(subjects);
-  std::cout<<"Subject : "<< subjects[dChoose].name << " deleted!" << std::endl;
-  subjects.erase(subjects.begin() + dChoose);
-
+  if(dChoose == -1)
+  {
+    std::cout << "Deletion aborted!" << std::endl;
+    return ;
+  }
+  std::cout << "Are you sure to delete (Y/N): " << subjects[dChoose].name <<std::endl;
+  std::string ynchoice;
+  std::getline(std::cin >> std::ws ,ynchoice);
+  if(ynchoice == "Y" || ynchoice == "y" )
+  {
+    std::cout<<"Subject : "<< subjects[dChoose].name << " deleted!" << std::endl;
+    subjects.erase(subjects.begin() + dChoose);
+    return ;
+  }
+  else if(ynchoice == "N" || ynchoice == "n")
+  {
+    std::cout << "Deletion Aborted!" << std::endl;
+    return ;
+  }
+  else
+  {
+    std::cout << "Invalid input!";
+  }
 }
 void saveAndExit()
 {
