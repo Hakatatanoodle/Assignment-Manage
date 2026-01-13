@@ -3,6 +3,7 @@
 #include<vector>
 #include<string>
 #include<limits>
+#include<fstream>
 struct Assignment
 {
   std::string title;
@@ -35,7 +36,9 @@ int inputValidation(std::string);
 
 int main()
 {
+
   int choice;
+  std::fstream myFile("file.txt",std::ios::app);
   std::cout<<"\n======Assignment Manager======\n";
   std::vector<Subject> subjects;
   do
