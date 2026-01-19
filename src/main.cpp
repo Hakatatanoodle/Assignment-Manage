@@ -4,6 +4,7 @@
 #include<string>
 #include<limits>
 #include<fstream>
+
 struct Assignment
 {
   std::string title;
@@ -29,7 +30,8 @@ void viewAssignments(std::vector<Subject>& subjects);
 void updateAssignment(std::vector<Subject>& subjects);
 void deleteAssignment(std::vector<Subject>& subjects);
 void deleteSubject(std::vector<Subject>& subjects);
-void saveAndExit();
+void saveAndExit(std::vector<Subject>& subjects);
+void saveData(const std::vector<Subject>& subjects);
 int chooseSubject(std::vector<Subject>& subjects);
 Index chooseAssignment(std::vector<Subject>& subjects);
 int inputValidation(std::string);
@@ -38,7 +40,7 @@ int main()
 {
 
   int choice;
-  std::fstream myFile("file.txt",std::ios::app);
+  std::fstream myFile("data.txt");
   std::cout<<"\n======Assignment Manager======\n";
   std::vector<Subject> subjects;
   do
@@ -74,7 +76,7 @@ int main()
     deleteSubject(subjects);
     break;
     case 7:
-    saveAndExit();
+    saveAndExit(subjects);
     break;
     default:
     std::cout<<"Invalid choice\n";
@@ -168,7 +170,32 @@ Index chooseAssignment(std::vector<Subject>& subjects)
 
     return Index{subIndex,assIndex};
 }
+void saveData(const std::vector<Subject>& subjects)
+{
+  int subSize = subjects.size();
+  std::ofstream oFile("data.txt");
+  if(!oFile.is_open())
+  {
+    std::cout << "Error opening file!" << std::endl;
+    return ;
+  }
+  oFile << subSize << std::endl;
+  for(int i=0;i<subSize;i++)
+  {
+    oFile << subjects[i].name << std::endl;
+    int assSize = subjects[i].assignments.size();
+    oFile << assSize << std::endl;
+    for(int j = 0; j < assSize; j++)
+    {
+      oFile << subjects[i].assignments[j].title << "|" ;
+      oFile << subjects[i].assignments[j].description << "|";
+      oFile << subjects[i].assignments[j].deadline << "|";
+      oFile << subjects[i].assignments[j].status << std::endl;
+    }
+  }
+  oFile.close();
 
+}
 void addSubject(std::vector<Subject>& subjects)
 {
   std::string Sname;
@@ -354,8 +381,9 @@ void deleteSubject(std::vector<Subject>& subjects)
     std::cout << "Invalid input!";
   }
 }
-void saveAndExit()
+void saveAndExit(std::vector<Subject>& subjects)
 {
-  std::cout<<"Saving and Exiting\n"<<std::endl;
+  saveData(subjects);
+  std::cout<<"Saving and Exiting.\n"<<std::endl;
 }
 
