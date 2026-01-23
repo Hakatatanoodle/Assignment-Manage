@@ -4,6 +4,7 @@
 #include<string>
 #include<limits>
 #include<fstream>
+
 struct Assignment
 {
   std::string title;
@@ -29,7 +30,9 @@ void viewAssignments(std::vector<Subject>& subjects);
 void updateAssignment(std::vector<Subject>& subjects);
 void deleteAssignment(std::vector<Subject>& subjects);
 void deleteSubject(std::vector<Subject>& subjects);
-void saveAndExit();
+void saveAndExit(std::vector<Subject>& subjects);
+void saveData(const std::vector<Subject>& subjects);
+void loadData(std::vector<Subject>& subjects);
 int chooseSubject(std::vector<Subject>& subjects);
 Index chooseAssignment(std::vector<Subject>& subjects);
 int inputValidation(std::string);
@@ -38,9 +41,9 @@ int main()
 {
 
   int choice;
-  std::fstream myFile("file.txt",std::ios::app);
   std::cout<<"\n======Assignment Manager======\n";
   std::vector<Subject> subjects;
+  loadData(subjects);
   do
   {
   std::cout<<"1.Add Subject\n";
@@ -74,7 +77,7 @@ int main()
     deleteSubject(subjects);
     break;
     case 7:
-    saveAndExit();
+    saveAndExit(subjects);
     break;
     default:
     std::cout<<"Invalid choice\n";
@@ -168,12 +171,95 @@ Index chooseAssignment(std::vector<Subject>& subjects)
 
     return Index{subIndex,assIndex};
 }
+//function to save data to file
+void saveData(const std::vector<Subject>& subjects)
+{
+  int subSize = subjects.size();
+  std::ofstream oFile("data.txt");
+  if(!oFile.is_open())
+  {
+    std::cout << "Error opening file!" << std::endl;
+    return ;
+  }
+  oFile << subSize << std::endl;
+  for(int i=0;i<subSize;i++)
+  {
+    oFile << subjects[i].name << std::endl;
+    int assSize = subjects[i].assignments.size();
+    oFile << assSize << std::endl;
+    for(int j = 0; j < assSize; j++)
+    {
+      oFile << subjects[i].assignments[j].title << "|" ;
+      oFile << subjects[i].assignments[j].description << "|";
+      oFile << subjects[i].assignments[j].deadline << "|";
+      oFile << subjects[i].assignments[j].status << std::endl;
+    }
+  }
+  oFile.close();
+}
+
+//function to load data from file
+void loadData(std::vector<Subject>& subjects)
+{
+  std::ifstream iFile("data.txt");
+  if(!iFile.is_open())
+  {
+    std::cout << "Error opening file!" << std::endl;
+    return ;
+  }
+  std::cout << "Loading data......" << std::endl;
+  int subCount;
+
+  subjects.clear();
+
+  iFile >> subCount;
+  iFile.ignore();
+
+  for(int i = 0; i < subCount ; i++)
+  {
+    Subject s;//construct a fresh subject
+    std::getline(iFile,s.name);
+
+    int assCount;
+    iFile >> assCount;
+    iFile.ignore();
+
+    for(int j = 0; j < assCount ; j++)
+    {
+      Assignment a;
+      std::getline(iFile,a.title,'|');
+      std::getline(iFile,a.description,'|');
+      std::getline(iFile,a.deadline,'|');
+
+      int status;
+      iFile >> status;
+      iFile.ignore();
+      a.status = status;
+      s.assignments.push_back(a);
+    }
+    subjects.push_back(s);
+  }
+  iFile.close();
+}
 
 void addSubject(std::vector<Subject>& subjects)
 {
   std::string Sname;
   std::cout<<"Enter subject name:\n"<<std::endl;
+  bool flag=true;
+  while(flag)
+  {
   std::getline(std::cin,Sname);
+  for (int i = 0; i < Sname.size();i++)
+  {
+    if(Sname[i]=='|')
+    {
+      std::cout << "character '|' is not allowed , please reenter: " <<std::endl;
+    }
+  }
+  flag = false;
+  }
+  
   Subject Sub;
   Sub.name = Sname;
   subjects.push_back(Sub);
@@ -354,8 +440,9 @@ void deleteSubject(std::vector<Subject>& subjects)
     std::cout << "Invalid input!";
   }
 }
-void saveAndExit()
+void saveAndExit(std::vector<Subject>& subjects)
 {
-  std::cout<<"Saving and Exiting\n"<<std::endl;
+  saveData(subjects);
+  std::cout<<"Saving and Exiting.\n"<<std::endl;
 }
 
