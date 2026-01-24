@@ -288,12 +288,11 @@ void addAssignment(std::vector<Subject>& subjects)
     return;
   }
   std::cout << "Enter assignment title:" << std::endl;
-  std::getline(std::cin,a.title);
   charInputValidation(a.title,'|');
   std::cout<<"Enter the description of the assignment: "<<std::endl;
-  std::getline(std::cin,a.description);
+  charInputValidation(a.description,'|');
   std::cout<<"Enter the deadline of the assignment: "<<std::endl;
-  std::getline(std::cin,a.deadline);
+  charInputValidation(a.deadline,'|');
   a.status = false;//default status
   subjects[subjectIndex].assignments.push_back(a);
 }
@@ -351,19 +350,19 @@ void updateAssignment(std::vector<Subject>& subjects)
   {
     std::cout << "Current title : " << subjects[assubIndex.subjectIndex].assignments[assubIndex.assignmentIndex].title << std::endl;
     std::cout << "Enter new title : ";
-    std::getline(std::cin>>std::ws,subjects[assubIndex.subjectIndex].assignments[assubIndex.assignmentIndex].title);
+    charInputValidation(subjects[assubIndex.subjectIndex].assignments[assubIndex.assignmentIndex].title,'|');
   }
   else if(choice == 1)
   {
     std::cout << "Current description : " << subjects[assubIndex.subjectIndex].assignments[assubIndex.assignmentIndex].description << std::endl;
     std::cout << "Enter new description : ";
-    std::getline(std::cin>>std::ws,subjects[assubIndex.subjectIndex].assignments[assubIndex.assignmentIndex].description);
+    charInputValidation(subjects[assubIndex.subjectIndex].assignments[assubIndex.assignmentIndex].description,'|');
   }
   else if(choice == 2)
   {
     std::cout << "Current deadline : " << subjects[assubIndex.subjectIndex].assignments[assubIndex.assignmentIndex].deadline << std::endl;
     std::cout << "Enter new deadline : " ;
-    std::getline(std::cin>>std::ws,subjects[assubIndex.subjectIndex].assignments[assubIndex.assignmentIndex].deadline);
+    charInputValidation(subjects[assubIndex.subjectIndex].assignments[assubIndex.assignmentIndex].deadline,'|');
   }
   else if(choice == 3)
   {
@@ -378,7 +377,7 @@ void updateAssignment(std::vector<Subject>& subjects)
     
     std::cout << "Toggle (Done/NotDone) : " << std::endl;
     std::string statusInput;
-    std::getline(std::cin >> std::ws ,statusInput);
+    charInputValidation(statusInput,'|');
     if(statusInput == "Done" || statusInput == "done" || statusInput == "Yes" || statusInput == "yes")
     {
       subjects[assubIndex.subjectIndex].assignments[assubIndex.assignmentIndex].status = true;
