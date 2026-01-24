@@ -31,11 +31,15 @@ void updateAssignment(std::vector<Subject>& subjects);
 void deleteAssignment(std::vector<Subject>& subjects);
 void deleteSubject(std::vector<Subject>& subjects);
 void saveAndExit(std::vector<Subject>& subjects);
+
+//file handling functions
 void saveData(const std::vector<Subject>& subjects);
 void loadData(std::vector<Subject>& subjects);
+//inputValidation functions
 int chooseSubject(std::vector<Subject>& subjects);
 Index chooseAssignment(std::vector<Subject>& subjects);
-int inputValidation(std::string);
+int parseIndex(std::string);
+void charInputValidation(std::string& str,char delimeter);
 
 int main()
 {
@@ -87,7 +91,7 @@ int main()
   return 0;
 }
 //function definitions
-int inputValidation(std::string s)
+int parseIndex(std::string s)
 {
   int index;
   try
@@ -108,7 +112,7 @@ int chooseSubject(std::vector<Subject>& subjects)
 {
     if (subjects.empty())
     {
-        std::cout << "No subjects!";
+        std::cout << "No subjects!"<< std::endl;
         return -1;
     }
 
@@ -122,7 +126,7 @@ int chooseSubject(std::vector<Subject>& subjects)
     std::getline(std::cin >> std::ws, input);
 
     int subIndex;
-    subIndex = inputValidation(input);
+    subIndex = parseIndex(input);
 
     if (subIndex < 0 || subIndex >= subjects.size())
     {
@@ -137,12 +141,12 @@ Index chooseAssignment(std::vector<Subject>& subjects)
   int subIndex = chooseSubject(subjects);
   if(subIndex == -1)
   {
-    std::cout<<"Indexing error!";
+    std::cout<<"Indexing error!"<<std::endl;
     return Index{-1,-1};
   }
   if(subjects[subIndex].assignments.size()<=0) 
   {
-    std::cout<<" NO assignments for this subject!"; 
+    std::cout<<" NO assignments for this subject!"<<std::endl; 
     return Index{-1,-1};
   }
   std::cout << "Choose the assignment: " << std::endl;
@@ -171,11 +175,31 @@ Index chooseAssignment(std::vector<Subject>& subjects)
 
     return Index{subIndex,assIndex};
 }
+//funcitno to input validation of certain delimeter 
+void charInputValidation(std::string& str,char delimeter)
+{
+bool valid=false;
+  while(!valid)
+  {
+    std::getline(std::cin,str);
+    valid = true;
+    for(char c: str)
+    {
+      if(c == delimeter)
+      {
+        std::cout<<"character" << delimeter << " is not allowed please re-enter"<<std::endl;
+        valid = false;
+        break;
+      }
+    }
+  }
+}
+
 //function to save data to file
 void saveData(const std::vector<Subject>& subjects)
 {
   int subSize = subjects.size();
-  std::ofstream oFile("data.txt");
+  std::ofstream oFile("assignment.txt");
   if(!oFile.is_open())
   {
     std::cout << "Error opening file!" << std::endl;
@@ -197,11 +221,12 @@ void saveData(const std::vector<Subject>& subjects)
   }
   oFile.close();
 }
+//inputValidation
 
 //function to load data from file
 void loadData(std::vector<Subject>& subjects)
 {
-  std::ifstream iFile("data.txt");
+  std::ifstream iFile("assignment.txt");
   if(!iFile.is_open())
   {
     std::cout << "Error opening file!" << std::endl;
@@ -246,20 +271,8 @@ void addSubject(std::vector<Subject>& subjects)
 {
   std::string Sname;
   std::cout<<"Enter subject name:\n"<<std::endl;
-  bool flag=true;
-  while(flag)
-  {
-  std::getline(std::cin,Sname);
-  for (int i = 0; i < Sname.size();i++)
-  {
-    if(Sname[i]=='|')
-    {
-      std::cout << "character '|' is not allowed , please reenter: " <<std::endl;
-    }
-  }
-  flag = false;
-  }
   
+  charInputValidation(Sname,'|');
   Subject Sub;
   Sub.name = Sname;
   subjects.push_back(Sub);
@@ -276,6 +289,7 @@ void addAssignment(std::vector<Subject>& subjects)
   }
   std::cout << "Enter assignment title:" << std::endl;
   std::getline(std::cin,a.title);
+  charInputValidation(a.title,'|');
   std::cout<<"Enter the description of the assignment: "<<std::endl;
   std::getline(std::cin,a.description);
   std::cout<<"Enter the deadline of the assignment: "<<std::endl;
@@ -325,7 +339,7 @@ void updateAssignment(std::vector<Subject>& subjects)
   std::string aChoice;
   std::getline( std::cin, aChoice );
   int choice;
-  choice = inputValidation(aChoice);
+  choice = parseIndex(aChoice);
   if(choice == -1) 
   {
     std::cout<<"Invalid choice!"<<std::endl;
