@@ -1,9 +1,0 @@
-Alice 
-18
-A
-Bob 
-19
-B
-Charlie 
-17
-C
