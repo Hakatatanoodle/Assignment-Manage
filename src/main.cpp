@@ -5,9 +5,10 @@
 #include <limits>
 #include <fstream>
 #include <algorithm>
+#include <cstdio>
 
 // constants
-std::string DATA_FILE = "/home/hakatatanoodle/Apps/aka.txt";
+std::string DATA_FILE = "assign.txt";
 
 struct Assignment
 {
@@ -202,29 +203,47 @@ void charInputValidation(std::string &str, char delimeter)
 void saveData(const std::vector<Subject> &subjects)
 {
   int subSize = subjects.size();
-  std::ofstream oFile(DATA_FILE);
+  std::ofstream oFile("data.tmp");
   if (!oFile.is_open())
   {
     std::cout << "Error opening file!" << std::endl;
     return;
   }
-  oFile << subSize << std::endl;
+  if(!(oFile << subSize << std::endl))
+  {
+    std::cout << "Error saving subject count!" << std::endl;
+    return ;
+  }
   for (int i = 0; i < subSize; i++)
   {
-    oFile << subjects[i].name << std::endl;
+    if(!(oFile << subjects[i].name << std::endl))
+    {
+      std::cout << "Error saving subject name!" << std::endl;
+      return ;
+    }
     int assSize = subjects[i].assignments.size();
-    oFile << assSize << std::endl;
+    if(!(oFile << assSize << std::endl))
+    {
+      std::cout << "Error saving assignment count!" << std::endl;
+      return ;
+    }
     for (int j = 0; j < assSize; j++)
     {
-      oFile << subjects[i].assignments[j].title << "|";
-      oFile << subjects[i].assignments[j].description << "|";
-      oFile << subjects[i].assignments[j].deadline << "|";
-      oFile << subjects[i].assignments[j].status << std::endl;
+      if(!(oFile << subjects[i].assignments[j].title << "|" <<  subjects[i].assignments[j].description << "|" << subjects[i].assignments[j].deadline << "|" << subjects[i].assignments[j].status << std::endl))
+      {
+        std::cout << "Error saving assignment data!" << std::endl;
+        return ;
+      }
     }
   }
   oFile.close();
+  // replace old data file with new temp file
+  if(std::rename("data.tmp", DATA_FILE.c_str())!=0)
+  {
+    std::cout << "Error finalizing save operation!" << std::endl;
+    return ;
+  }
 }
-// inputValidation
 
 // function to load data from file
 void loadData(std::vector<Subject> &subjects)
