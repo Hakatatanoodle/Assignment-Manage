@@ -64,7 +64,7 @@ int main()
     std::cout << "choose: ";
     std::cin >> choice;
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-    switch (choice)
+    switch(choice)
     {
     case 1:
       addSubject(subjects);
@@ -85,15 +85,29 @@ int main()
       deleteSubject(subjects);
       break;
     case 7:
+    {
+      std::string yn;
+      std::cout << "Save before extit? (Y/N): ";
+      std::getline(std::cin >> std::ws,yn);
+      if(yn == "Y" || yn == "y")
+      {
+        saveData(subjects);
+        std::cout << "Data saved successfully." <<std::endl;
+      }
       saveAndExit(subjects);
       break;
+    }
+      
     default:
       std::cout << "Invalid choice\n";
       break;
     }
   } while (choice != 7);
+  saveData(subjects);
+  std::cout << "Auto Save before exit" << std::endl;
+
   return 0;
-}
+} 
 // function definitions
 int parseIndex(std::string s)
 {
@@ -321,6 +335,12 @@ void addSubject(std::vector<Subject> &subjects)
             << std::endl;
 
   charInputValidation(Sname, '|');
+  //make sure subject name is not empty
+  if(Sname.empty())
+  {
+    std::cout << "Subject name cannot be empty!" <<std::endl;
+    return;
+  }
   Subject Sub;
   Sub.name = Sname;
   subjects.push_back(Sub);
@@ -337,10 +357,25 @@ void addAssignment(std::vector<Subject> &subjects)
   }
   std::cout << "Enter assignment title:" << std::endl;
   charInputValidation(a.title, '|');
+  if(a.title.empty())
+  {
+    std::cout << "Assignment title cannot be empty!" <<std::endl;
+    return;
+  }
   std::cout << "Enter the description of the assignment: " << std::endl;
   charInputValidation(a.description, '|');
+  if(a.description.empty())
+  {
+    std::cout << "Assignment description cannot be empty!" <<std::endl;
+    return;
+  }
   std::cout << "Enter the deadline of the assignment: " << std::endl;
   charInputValidation(a.deadline, '|');
+  if(a.deadline.empty())
+  {
+    std::cout << "Assignment deadline cannot be empty!" <<std::endl;
+    return;
+  }
   a.status = false; // default status
   subjects[subjectIndex].assignments.push_back(a);
 }
@@ -509,7 +544,5 @@ void deleteSubject(std::vector<Subject> &subjects)
 }
 void saveAndExit(std::vector<Subject> &subjects)
 {
-  saveData(subjects);
-  std::cout << "Saving and Exiting.\n"
-            << std::endl;
+  std::cout << "Saving and Exiting.\n" << std::endl;
 }
